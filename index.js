@@ -8,7 +8,7 @@ async function run(name, url, callable) {
 
     await page.goto(url);
 
-    const datas = await callable(page);
+    const data = await callable(page);
 
     await browser.close();
 
@@ -21,7 +21,7 @@ async function run(name, url, callable) {
         fs.mkdirSync(path, {recursive: true});
     }
 
-    fs.writeFileSync(`${path}/${name}.json`, JSON.stringify({url,date,...datas}));
+    fs.writeFileSync(`${path}/${name}.json`, JSON.stringify({url,date,data}));
 
     return 0;
 }
