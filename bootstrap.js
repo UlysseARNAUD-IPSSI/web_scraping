@@ -1,4 +1,3 @@
-
 const fs = require('fs');
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
@@ -26,7 +25,7 @@ global.run = async function run(name, url, callable) {
 
     }
 
-    console.log('Opening new page...')
+    console.log('Opening new page...');
     const page = await browser.newPage();
 
     _genericEval = _genericEval.bind(page);
@@ -47,8 +46,6 @@ global.run = async function run(name, url, callable) {
             await browser.close();
         }
     }, 2000);
-
-    await browser.close();
 
     const path = `${dirname(require.main.filename)}/result`;
 
