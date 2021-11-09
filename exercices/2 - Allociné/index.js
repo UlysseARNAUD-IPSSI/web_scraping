@@ -4,18 +4,14 @@ require('../../bootstrap');
     await run(
         'allocine-alaune',
         'https://www.allocine.fr/',
-        async page => {
+        async () => {
 
-            console.log('Waiting for cookie popup')
-            await page.waitForSelector('#didomi-popup');
-            const popup = await page.$eval('#didomi-popup', element => {
+            const popup = await $eval('#didomi-popup', element => {
                 element.remove();
                 element.ownerDocument.body.classList.remove('didomi-popup-open');
-            });
+            }, 'Waiting for cookie popup...');
 
-            console.log('Waiting for sliders...');
-            await page.waitForSelector('.roller-slider');
-            const sliders = await page.$$eval('.roller-slider', elements => {
+            const sliders = await $$eval('.roller-slider', elements => {
                 const datas = [];
 
                 const [incoming,featured] = elements
@@ -40,7 +36,7 @@ require('../../bootstrap');
                 }
 
                 return datas;
-            });
+            },'Waiting for sliders...');
 
             console.log({sliders});
 

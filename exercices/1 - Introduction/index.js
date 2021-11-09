@@ -4,7 +4,7 @@ require('../../bootstrap');
     await run(
         'parsememcparseface',
         'https://pythonprogramming.net/parsememcparseface/',
-        async page => {
+        async () => {
 
             const header = await $eval('.body > table > tbody > tr', element => {
                 return Array.from(element.querySelectorAll('th')).map(cell => cell.innerText.trim());
@@ -28,7 +28,7 @@ require('../../bootstrap');
     await run(
         'warandpeace',
         'http://www.pythonscraping.com/pages/warandpeace.html',
-        async page => {
+        async () => {
 
             const green = await $$eval('.green', elements => {
                 return Array.from(elements).map(element => element.innerHTML.trim());
@@ -38,7 +38,7 @@ require('../../bootstrap');
                 return Array.from(elements).map(element => element.innerHTML.trim());
             }, 'Waiting for red words...');
 
-            const both = await page.$$eval('.red,.green', elements => {
+            const both = await $$eval('.red, .green', elements => {
                 return Array.from(elements).map(element => element.innerHTML.trim());
             }, 'Waiting for red & green words...');
 

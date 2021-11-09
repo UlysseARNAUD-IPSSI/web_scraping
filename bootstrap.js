@@ -8,8 +8,8 @@ puppeteer.use(StealthPlugin());
 
 let browser;
 
-let isLaunching = false
-let runningTasks = []
+let isLaunching = false;
+let runningTasks = [];
 
 global.run = async function run(name, url, callable) {
 
@@ -19,14 +19,15 @@ global.run = async function run(name, url, callable) {
         console.log('Launching browser...');
         browser = await puppeteer.launch({
             headless: false,
-            args: ['--disable-web-security',],
+            args: ['--disable-web-security'],
         });
         isLaunching = true;
-
     }
 
     console.log('Opening new page...');
     const page = await browser.newPage();
+
+    callable = callable.bind(page);
 
     _genericEval = _genericEval.bind(page);
     global.$eval = $eval;
@@ -34,7 +35,15 @@ global.run = async function run(name, url, callable) {
 
     await page.goto(url);
 
-    const data = await callable(page);
+    let data;
+
+    try {
+        await page.waitForNavigation({timeout: 500});
+        data = await callable();
+    }
+    catch(e) {
+        console.error(`Error on "${url}"`);
+    }
 
     runningTasks.splice(runningTasks.indexOf(name), 1);
 
@@ -46,6 +55,8 @@ global.run = async function run(name, url, callable) {
             await browser.close();
         }
     }, 2000);
+
+    const date = (new Date).toLocaleString(browser.language).replace(', ',' ');
 
     const path = `${dirname(require.main.filename)}/result`;
 

@@ -4,8 +4,7 @@ require('../../bootstrap');
     await run(
         'allocine-alaune',
         'https://www.leboncoin.fr/',
-        async page => {
-
+        async () => {
 
             let exit = false;
             while (!exit) {
