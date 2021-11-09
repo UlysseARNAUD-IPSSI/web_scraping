@@ -1,3 +1,4 @@
+
 const fs = require('fs');
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
@@ -47,8 +48,7 @@ global.run = async function run(name, url, callable) {
         }
     }, 2000);
 
-    console.log('Writing file with results...');
-    const date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    await browser.close();
 
     const path = `${dirname(require.main.filename)}/result`;
 

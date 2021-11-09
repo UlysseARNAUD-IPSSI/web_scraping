@@ -1,30 +1,4 @@
-const fs = require('fs');
-const puppeteer = require("puppeteer");
-
-async function run(name, url, callable) {
-    console.log('Launching browser...')
-    const browser = await puppeteer.launch({headless: false});
-    const page = await browser.newPage();
-
-    await page.goto(url);
-
-    const data = await callable(page);
-
-    await browser.close();
-
-    console.log('Writing file with results...');
-    const date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
-    const path = `result`;
-
-    if (!fs.existsSync(path)) {
-        fs.mkdirSync(path, {recursive: true});
-    }
-
-    fs.writeFileSync(`${path}/${name}.json`, JSON.stringify({url,date,data}));
-
-    return 0;
-}
+require('../bootstrap');
 
 (async function() {
     await run(
@@ -54,7 +28,7 @@ async function run(name, url, callable) {
                 image
             };
         }
-    )
+    );
 
     await run(
         'warandpeace',
@@ -81,5 +55,5 @@ async function run(name, url, callable) {
 
             return {green, red, both};
         }
-    )
+    );
 })()
