@@ -45,6 +45,10 @@ let browser;
 let isLaunching = false;
 let runningTasks = [];
 
+global.projectPath = global.projectPath ?? dirname(require.main.filename);
+
+global.headless = global.headless ?? -1 < process.argv.indexOf('--headless')
+
 global.run = async function run(name, url, callable) {
 
     runningTasks.push(name);
@@ -52,7 +56,7 @@ global.run = async function run(name, url, callable) {
     if (!isLaunching) {
         Logger.debug('Launching browser');
         browser = await puppeteer.launch({
-            headless: -1 < process.argv.indexOf('--headless'),
+            headless: global.headless,
             args: ['--disable-web-security'],
         });
         isLaunching = true;
@@ -126,7 +130,7 @@ global.run = async function run(name, url, callable) {
         }
     }, 2000);
 
-    const path = `${dirname(require.main.filename)}/result/${name}`;
+    const path = `${global.projectPath}/result/${name}`;
 
     writeJSON(path, url, {data});
 
