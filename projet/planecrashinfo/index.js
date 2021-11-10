@@ -1,8 +1,6 @@
 (module.exports = () => {
     require('../../bootstrap');
-
     global.datas = {years: [['name', 'url']]};
-
     (async function () {
         await run(
             'database',
