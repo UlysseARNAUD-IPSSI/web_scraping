@@ -17,7 +17,7 @@ const debugStream = fs.createWriteStream(`${logsPath}/debug.txt`);
 global.Logger = {
     _generic(command, variable, message) {
         const date = now();
-        const content = `${date} : ${message}\n`;
+        const content = `[${date}] ${message}\n`;
 
         if (!!command) terminal[command](content);
         else terminal(content);
@@ -81,7 +81,7 @@ global.run = async function run(name, url, callable) {
             if (!!page) if (!!page.close) page.close();
         }
     }
-    
+
     page.original_$eval = page.$eval;
     page.original_$$eval = page.$$eval;
     page.$eval = $eval.bind(page);

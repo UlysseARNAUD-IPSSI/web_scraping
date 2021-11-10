@@ -21,9 +21,6 @@ terminal.gridMenu(items, (error, response) => {
         return;
     }
 
-    // terminal('\n').eraseLineAfter.green("#%s selected: %s (%s,%s)\n", selectedIndex, selectedText, x, y);
-    // process.exit();
-
     global.projectPath = `${dirname(require.main.filename)}/projet/${selectedText}`;
 
     require(`./projet/${selectedText}`);
