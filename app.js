@@ -10,10 +10,17 @@ terminal.cyan('Choisissez un site :\n');
 
 const path = `${process.cwd()}/projet`;
 
-const items = fs.readdirSync(path);
+const items = [...fs.readdirSync(path), 'exit'];
 
 terminal.gridMenu(items, (error, response) => {
     const {selectedIndex, selectedText, x, y} = response;
+
+    if ('exit' === selectedText) {
+        terminal("\r\nBye !\n\r\n");
+        process.exit();
+        return;
+    }
+
     // terminal('\n').eraseLineAfter.green("#%s selected: %s (%s,%s)\n", selectedIndex, selectedText, x, y);
     // process.exit();
 
