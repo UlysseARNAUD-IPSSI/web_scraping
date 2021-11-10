@@ -28,9 +28,31 @@ global.datas = {years: []};
                 const table = await page.$eval('table', element => {
                     const rows = Array.from(element.querySelectorAll('tr'));
                     const header = ['url', ...Array.from(rows.shift().querySelectorAll('td')).map(cell => cell.innerText.trim())];
-                    const body = rows.map(row => Array.from(row.querySelectorAll('td')).map(cell => cell.innerText.trim()));
+                    const body = rows.map(row => [row.querySelector('a').href.trim(), ...Array.from(row.querySelectorAll('td')).map(cell => cell.innerText.trim())]);
                     return {header, body};
                 }, `Waiting for year ${year}...`);
+
+                for (const row in table.body) {
+                    let entry = {};
+
+                    for (const index in table.header) {
+                        entry[table.header[index]] = table.body[row][index];
+                    }
+
+                    const {url} = entry;
+
+                    const id = url.substring(url.lastIndexOf('/') + 1).replace(/\.[^/.]+$/, "");
+
+                    await run(`records/${year}/${id}`, url, async page => {
+
+                        const header = page.$$eval('tr td:first-child', elements => {
+                            return elements.map(element => element.innerText.trim().replace(':', ''))
+                        });
+
+                        return {header};
+
+                    });
+                }
 
                 return {table};
             }

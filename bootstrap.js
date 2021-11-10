@@ -140,7 +140,7 @@ global.$$eval = async function $$eval(selector, callback, waitingMessage, argume
 }
 
 async function _genericEval(page, name, selector, callback, waitingMessage, argumentsWaitForSelector = [], argumentsEval = []) {
-    Logger.info(waitingMessage ?? `Waiting for element ${selector}`);
+    Logger.info(waitingMessage ?? `Waiting for element "${selector}"`);
     let element = undefined;
     try {
         await page.waitForSelector(selector, ...argumentsWaitForSelector);
