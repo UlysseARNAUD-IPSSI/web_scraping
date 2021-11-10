@@ -4,7 +4,7 @@ const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const {dirname} = require('path');
 const {terminal} = require('terminal-kit');
 
-const logsPath = `${dirname(require.main.filename)}/logs/`;
+const logsPath = `${global.projectPath}/logs/`;
 
 if (!fs.existsSync(logsPath)) {
     fs.mkdirSync(logsPath, {recursive: true});
@@ -50,7 +50,6 @@ global.projectPath = global.projectPath ?? dirname(require.main.filename);
 global.headless = global.headless ?? -1 < process.argv.indexOf('--headless')
 
 global.run = async function run(name, url, callable) {
-
     runningTasks.push(name);
 
     if (!isLaunching) {
@@ -82,42 +81,42 @@ global.run = async function run(name, url, callable) {
             if (!!page) if (!!page.close) page.close();
         }
     }
+    
+    page.original_$eval = page.$eval;
+    page.original_$$eval = page.$$eval;
+    page.$eval = $eval.bind(page);
+    page.$$eval = $$eval.bind(page);
 
     let data;
 
     try {
-        page.original_$eval = page.$eval;
-        page.original_$$eval = page.$$eval;
-
-        page.$eval = $eval.bind(page);
-        page.$$eval = $$eval.bind(page);
-
         data = await callable(page);
     } catch (e) {
         Logger.error(e);
     }
 
+    if (!global.headless ?? false) {
+        const timeouts = [500, 3000, 10000, 30000, 60000];
+        cursorLimit = 0;
+        while (true) {
+            if (cursorLimit >= limit) {
+                const message = `Error while opening "${url}".`;
+                Logger.error(message);
+                break;
+            }
 
-    /*const timeouts = [500, 3000, 10000, 30000, 60000];
-    cursorLimit = 0;
-    while(true) {
-        if (cursorLimit >= limit) {
-            const message = `Error while opening "${url}".`;
-            Logger.error(message);
-            break;
+            const timeout = timeouts[cursorLimit];
+
+            try {
+                await page.waitForNavigation({timeout, waitUntil: 'load'});
+                data = await callable();
+                break;
+            } catch (e) {
+                cursorLimit++;
+                Logger.error(e);
+            }
         }
-
-        const timeout = timeouts[cursorLimit];
-
-        try {
-            await page.waitForNavigation({timeout, waitUntil: 'load'});
-            data = await callable();
-            break;
-        } catch (e) {
-            cursorLimit++;
-            Logger.error(e);
-        }
-    }*/
+    }
 
     Logger.debug('Closing page');
     await page.close();
@@ -125,14 +124,10 @@ global.run = async function run(name, url, callable) {
     runningTasks.splice(runningTasks.indexOf(name), 1);
 
     setTimeout(async () => {
-        if (1 > runningTasks.length) {
-            await browser.close();
-        }
+        if (1 > runningTasks.length) await browser.close();
     }, 2000);
 
-    const path = `${global.projectPath}/result/${name}`;
-
-    writeJSON(path, url, {data});
+    writeJSON(`${global.projectPath}/result/${name}`, url, {data});
 
     return 0;
 };
@@ -159,16 +154,9 @@ async function _genericEval(page, name, selector, callback, waitingMessage, argu
 
 function writeJSON(path, url, content) {
     const date = now();
-
-    path = `${path}.json`;
-    const pathdir = dirname(path);
-
-    if (!fs.existsSync(pathdir)) {
-        fs.mkdirSync(pathdir, {recursive: true});
-    }
-
+    const pathdir = dirname((path = `${path}.json`));
+    if (!fs.existsSync(pathdir)) fs.mkdirSync(pathdir, {recursive: true});
     fs.writeFileSync(path, JSON.stringify({url, date, ...content}));
-
     return 0;
 }
 
