@@ -14,8 +14,6 @@ global.datas = {years: []};
 
             datas.years = years;
 
-            Logger.info(years.map(e=>e[0]));
-
             return {
                 years
             };
@@ -45,11 +43,15 @@ global.datas = {years: []};
 
                     await run(`records/${year}/${id}`, url, async page => {
 
-                        const header = page.$$eval('tr td:first-child', elements => {
-                            return elements.map(element => element.innerText.trim().replace(':', ''))
+                        const header = await page.$$eval('tr>td:first-child', elements => {
+                            return elements.map(element => element.innerText.replace(':', '').trim());
                         });
 
-                        return {header};
+                        const body = await page.$$eval('tr>td:last-child', elements => {
+                            return elements.map(element => element.innerText.trim());
+                        });
+
+                        return {header, body};
 
                     });
                 }
