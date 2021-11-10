@@ -50,6 +50,7 @@ global.projectPath = global.projectPath ?? dirname(require.main.filename);
 global.headless = global.headless ?? -1 < process.argv.indexOf('--headless')
 
 global.run = async function run(name, url, callable) {
+
     runningTasks.push(name);
 
     if (!isLaunching) {
@@ -105,10 +106,8 @@ global.run = async function run(name, url, callable) {
                 break;
             }
 
-            const timeout = timeouts[cursorLimit];
-
             try {
-                await page.waitForNavigation({timeout, waitUntil: 'load'});
+                await page.waitForNavigation({timeout: timeouts[cursorLimit], waitUntil: 'load'});
                 data = await callable();
                 break;
             } catch (e) {
@@ -153,10 +152,9 @@ async function _genericEval(page, name, selector, callback, waitingMessage, argu
 }
 
 function writeJSON(path, url, content) {
-    const date = now();
     const pathdir = dirname((path = `${path}.json`));
     if (!fs.existsSync(pathdir)) fs.mkdirSync(pathdir, {recursive: true});
-    fs.writeFileSync(path, JSON.stringify({url, date, ...content}));
+    fs.writeFileSync(path, JSON.stringify({url, date: now(), ...content}));
     return 0;
 }
 
