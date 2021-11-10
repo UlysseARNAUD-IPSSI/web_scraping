@@ -29,9 +29,7 @@
                     const id = url.substring(url.lastIndexOf('?id=') + 4);
 
                     await run(`records/${year}/${id}`, url, async page => {
-                        const header = await page.$$eval('tr>td:first-child', elements => elements.map(element => element.innerText.replace(':', '').trim());
-                    )
-                        ;
+                        const header = await page.$$eval('tr>td:first-child', elements => elements.map(element => element.innerText.replace(':', '').trim()));
                         const body = await page.$$eval('tr>td:last-child', elements => elements.map(element => element.innerText.trim()));
                         const narrative = await page.$eval('.caption + br + span', element => element.innerText.trim());
                         return {
