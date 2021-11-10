@@ -1,6 +1,6 @@
 require('../../bootstrap');
 
-global.datas = {years: []};
+global.datas = {years: [['name', 'url']]};
 
 (async function () {
     await run(
@@ -8,8 +8,8 @@ global.datas = {years: []};
         'http://www.planecrashinfo.com/database.htm',
         async page => {
 
-            const years = await page.$eval('table:nth-of-type(2)', element => {
-                return Array.from(element.querySelectorAll('td a')).map(cell => [cell.innerText.trim(), cell.href.trim()]);
+            const years = await page.$eval('.preface + p + p > a', element => {
+                return element.map(cell => [cell.innerText.trim(), cell.href.trim()]);
             }, 'Waiting for table...');
 
             datas.years = years;
@@ -24,7 +24,7 @@ global.datas = {years: []};
                 const table = await page.$eval('table', element => {
                     const rows = Array.from(element.querySelectorAll('tr'));
                     const header = ['url', ...Array.from(rows.shift().querySelectorAll('td')).map(cell => cell.innerText.trim())];
-                    const body = rows.map(row => [row.querySelector('a').href.trim(), ...Array.from(row.querySelectorAll('td')).map(cell => cell.innerText.trim())]);
+                    const body = rows.map(row => [row.querySelector('a').href.trim(), ...Array.from(row.querySelectorAll('td')).map(cell => cell.innerText.trim() ?? -1 < cell.children.length)]);
                     return {header, body};
                 }, `Waiting for year ${year}...`);
 
@@ -37,7 +37,7 @@ global.datas = {years: []};
 
                     const {url} = entry;
 
-                    const id = url.substring(url.lastIndexOf('/') + 1).replace(/\.[^/.]+$/, "");
+                    const id = url.substring(url.lastIndexOf('?id=') + 1);
 
                     await run(`records/${year}/${id}`, url, async page => {
 
@@ -49,8 +49,12 @@ global.datas = {years: []};
                             return elements.map(element => element.innerText.trim());
                         });
 
-                        return {header, body};
+                        const narrative = await page.$eval('.caption + br + span', element => element.innerText.trim());
 
+                        return {
+                            header : [...header, 'Narrative'],
+                            body : [...body, narrative]
+                        };
                     });
                 }
 
