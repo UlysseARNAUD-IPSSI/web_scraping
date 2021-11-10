@@ -8,17 +8,13 @@ global.datas = {years: []};
         'http://www.planecrashinfo.com/database.htm',
         async page => {
 
-            const header = await page.$$eval('table:nth-of-type(3) tr', elements => {
-                return elements.map(element => Array.from(element.children).map((element, index) => [element.innerText.trim().replace(':', ''), element.innerText.trim()][index]));
-            });
-
             const years = await page.$eval('table:nth-of-type(2)', element => {
                 return Array.from(element.querySelectorAll('td a')).map(cell => [cell.innerText.trim(), cell.href.trim()]);
             }, 'Waiting for table...');
 
             datas.years = years;
 
-            return {header, years};
+            return {years};
         }
     );
 
