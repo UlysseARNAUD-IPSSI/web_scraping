@@ -1,9 +1,10 @@
 {
-  "name": "1---introduction",
+  "name": "web_scraping",
   "version": "1.0.0",
   "description": "",
   "private": "true",
   "scripts": {
+    "projet": "node ./projet/planecrashinfo/index.js --headless",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -11,6 +12,7 @@
   "dependencies": {
     "puppeteer": "^11.0.0",
     "puppeteer-extra": "^3.2.3",
-    "puppeteer-extra-plugin-stealth": "^2.9.0"
+    "puppeteer-extra-plugin-stealth": "^2.9.0",
+    "terminal-kit": "^2.1.8"
   }
 }
