@@ -58,7 +58,6 @@ global.run = async function run(name, url, callable) {
         isLaunching = true;
     }
 
-    Logger.debug('Opening new page');
     const limit = 5;
     let page, cursorLimit = 0;
 
@@ -68,12 +67,15 @@ global.run = async function run(name, url, callable) {
             break;
         }
         try {
+            Logger.debug('Opening new page');
             page = await browser.newPage();
+            Logger.debug(`Going to "${url}"`);
             await page.goto(url);
             break;
         } catch (e) {
             cursorLimit++;
             Logger.error(e);
+            if (!!page) if (!!page.close) page.close();
         }
     }
 
