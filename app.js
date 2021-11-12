@@ -11,7 +11,7 @@ function mainMenu() {
     terminal.cyan('Menu principal\n');
     terminal.cyan('Que souhaitez-vous faire ?\n');
 
-    const items = ['scraping', 'traitement', 'quitter'];
+    const items = ['exercices', 'scraping', 'traitement', 'quitter'];
 
     terminal.gridMenu(items, (error, response) => {
         if (error) return;
@@ -23,16 +23,25 @@ function mainMenu() {
             return;
         }
 
-        if ('scraping' === selectedText) return _genericMenu({
-            path: `${dirname(require.main.filename)}/projet`,
-            message: 'Choisissez un projet',
-            directories: true
-        });
+        const choices = {
+            exercices: {
+                path: `${dirname(require.main.filename)}/exercices`,
+                message: 'Choisissez un exercice',
+                directories: true
+            },
+            scraping: {
+                path: `${dirname(require.main.filename)}/projet`,
+                message: 'Choisissez un projet',
+                directories: true
+            },
+            traitement: {
+                path: `${dirname(require.main.filename)}/scripts`,
+                message: 'Choisissez un script'
+            }
+        };
 
-        if ('traitement' === selectedText) return _genericMenu({
-            path: `${dirname(require.main.filename)}/scripts`,
-            message: 'Choisissez un script'
-        });
+        const choice = choices[selectedText] ?? {};
+        if (!!choice) return _genericMenu(choice);
 
         process.exit();
     });
