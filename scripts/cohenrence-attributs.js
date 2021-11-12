@@ -74,7 +74,7 @@
 
         const records = fs.readdirSync(recordsPath);
         for (const year of records) {
-            Logger.debug(`Loading year ${year}`);
+            logger.debug(`Loading year ${year}`);
             const yearPath = `${recordsPath}/${year}`;
             const entries = fs.readdirSync(yearPath);
             for (const entry of entries) {
