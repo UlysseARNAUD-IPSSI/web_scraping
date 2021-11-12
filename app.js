@@ -1,27 +1,91 @@
-const {terminal} = require('terminal-kit');
-const fs = require('fs');
-const {dirname} = require('path');
+require('./bootstrap');
+const {terminal,fs,dirname} = global;
 
-global.headless = true;
 
-terminal.clear();
+(() => {
+    global.headless = true;
 
-terminal.cyan('Choisissez un site :\n');
+    terminal.clear();
 
-const path = `${process.cwd()}/projet`;
+    terminal.cyan('Menu principal\n');
+    terminal.cyan('Que souhaitez-vous faire ?\n');
 
-const items = [...fs.readdirSync(path), 'exit'];
+    const items = ['scraping', 'traitement', 'exit'];
 
-terminal.gridMenu(items, (error, response) => {
-    const {selectedIndex, selectedText, x, y} = response;
+    terminal.gridMenu(items, (error, response) => {
 
-    if ('exit' === selectedText) {
-        terminal("\r\nBye !\n\r\n");
+        if (error) return;
+
+        const {selectedIndex, selectedText, x, y} = response;
+
+        if ('exit' === selectedText) {
+            terminal("\r\nBye !\n\r\n");
+            process.exit();
+            return;
+        }
+
+        if ('scraping' === selectedText) return scraping();
+
+        if ('traitement' === selectedText) return traitement();
+
         process.exit();
-        return;
-    }
+    });
+})();
 
-    global.projectPath = `${dirname(require.main.filename)}/projet/${selectedText}`;
 
-    require(`./projet/${selectedText}`);
-});
+function scraping ()  {
+    terminal.clear();
+
+    terminal.cyan('Choisissez un site :\n');
+
+    const path = `${process.cwd()}/projet`;
+
+    const items = [...fs.readdirSync(path), 'exit'];
+
+    terminal.gridMenu(items, (error, response) => {
+        const {selectedIndex, selectedText, x, y} = response;
+
+        if ('exit' === selectedText) {
+            terminal("\r\nBye !\n\r\n");
+            process.exit();
+            return;
+        }
+
+        global.projectPath = `${dirname(require.main.filename)}/projet/${selectedText}`;
+
+        terminal.clear();
+
+        require(`./projet/${selectedText}`);
+
+        process.exit();
+    });
+}
+
+
+function traitement ()  {
+    terminal.clear();
+
+    terminal.cyan('Choisissez un script :\n');
+
+    const path = `${process.cwd()}/scripts`;
+
+    const items = [...fs.readdirSync(path).filter(e=>-1 < e.indexOf('.js')).map(e=>e.replace('.js', '')), 'exit'];
+
+    terminal.gridMenu(items, (error, response) => {
+        let {selectedIndex, selectedText, x, y} = response;
+
+        if ('exit' === selectedText) {
+            terminal("\r\nBye !\n\r\n");
+            process.exit();
+            return;
+        }
+
+        global.scriptPath = `${dirname(require.main.filename)}/scripts/${selectedText}.js`;
+
+        terminal.clear();
+
+        require(`./scripts/${selectedText}`);
+
+        process.exit();
+    });
+}
