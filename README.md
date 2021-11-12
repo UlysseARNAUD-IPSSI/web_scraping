@@ -18,6 +18,8 @@ npm start
 
 **Pré-requis :** NodeJS v16.8.0
 
+Cloner le répertoire avant de lancer les commandes suivantes :
+
 ```bash
 npm i
 npm start
