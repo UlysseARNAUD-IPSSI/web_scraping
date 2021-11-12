@@ -16,6 +16,8 @@
 
     for (const project of projects) {
 
+        logger.info(`"${project}" selected`);
+
         result.database[project] = {};
         result.records[project] = {};
 
