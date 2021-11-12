@@ -5,12 +5,16 @@ const {terminal,fs,dirname} = global;
 (() => {
     global.headless = true;
 
+    mainMenu();
+})();
+
+function mainMenu() {
     terminal.clear();
 
     terminal.cyan('Menu principal\n');
     terminal.cyan('Que souhaitez-vous faire ?\n');
 
-    const items = ['scraping', 'traitement', 'exit'];
+    const items = ['scraping', 'traitement', 'quitter'];
 
     terminal.gridMenu(items, (error, response) => {
 
@@ -18,7 +22,7 @@ const {terminal,fs,dirname} = global;
 
         const {selectedIndex, selectedText, x, y} = response;
 
-        if ('exit' === selectedText) {
+        if ('quitter' === selectedText) {
             terminal("\r\nBye !\n\r\n");
             process.exit();
             return;
@@ -30,7 +34,7 @@ const {terminal,fs,dirname} = global;
 
         process.exit();
     });
-})();
+}
 
 
 function scraping ()  {
@@ -40,16 +44,18 @@ function scraping ()  {
 
     const path = `${process.cwd()}/projet`;
 
-    const items = [...fs.readdirSync(path), 'exit'];
+    const items = [...fs.readdirSync(path), 'retour', 'quitter'];
 
     terminal.gridMenu(items, (error, response) => {
         const {selectedIndex, selectedText, x, y} = response;
 
-        if ('exit' === selectedText) {
+        if ('quitter' === selectedText) {
             terminal("\r\nBye !\n\r\n");
             process.exit();
             return;
         }
+
+        if ('retour' === selectedText) return mainMenu();
 
         global.projectPath = `${dirname(require.main.filename)}/projet/${selectedText}`;
 
@@ -69,16 +75,18 @@ function traitement ()  {
 
     const path = `${process.cwd()}/scripts`;
 
-    const items = [...fs.readdirSync(path).filter(e=>-1 < e.indexOf('.js')).map(e=>e.replace('.js', '')), 'exit'];
+    const items = [...fs.readdirSync(path).filter(e=>-1 < e.indexOf('.js')).map(e=>e.replace('.js', '')), 'retour', 'quitter'];
 
     terminal.gridMenu(items, (error, response) => {
         let {selectedIndex, selectedText, x, y} = response;
 
-        if ('exit' === selectedText) {
+        if ('quitter' === selectedText) {
             terminal("\r\nBye !\n\r\n");
             process.exit();
             return;
         }
+
+        if ('retour' === selectedText) return mainMenu();
 
         global.scriptPath = `${dirname(require.main.filename)}/scripts/${selectedText}.js`;
 
