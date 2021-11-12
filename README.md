@@ -12,6 +12,9 @@ npm start
 * [Installation]()
 * [Analyse]()
   * [Erreurs et comparaison]()
+    * [Cohérence des attributs]()
+    * [Comparaison des enregistrements]()
+    * [Statistiques sur les crashs]()
   * [Fusion]()
 
 ## Installation
@@ -43,7 +46,7 @@ Dans un second temps, on cherchera à comparer l'ensemble des enregistrements de
 Dans un dernier temps, on cherchera à faire certaines statistiques sur les crashs récoltées entre les deux sites.
 
 
-#### Cohérences des attributs
+#### Cohérence des attributs
 
 ```json
 ```
