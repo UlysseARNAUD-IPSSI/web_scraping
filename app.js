@@ -1,10 +1,8 @@
 require('./bootstrap');
 const {terminal, fs, dirname} = global;
 
-
 (() => {
     global.headless = true;
-
     mainMenu();
 })();
 
@@ -68,7 +66,7 @@ function _genericMenu(
         }
 
         if ('retour' === selectedText) return mainMenu();
-        
+
         terminal.clear();
         require(`${path}/${selectedText}`);
         terminal.clear();
