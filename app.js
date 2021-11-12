@@ -8,7 +8,6 @@ const {terminal, fs, dirname} = global;
 
 function mainMenu() {
     terminal.clear();
-
     terminal.cyan('Menu principal\n');
     terminal.cyan('Que souhaitez-vous faire ?\n');
 
@@ -16,7 +15,6 @@ function mainMenu() {
 
     terminal.gridMenu(items, (error, response) => {
         if (error) return;
-
         const {selectedIndex, selectedText, x, y} = response;
 
         if ('quitter' === selectedText) {
@@ -64,7 +62,6 @@ function _genericMenu(
             process.exit();
             return;
         }
-
         if ('retour' === selectedText) return mainMenu();
 
         terminal.clear();
