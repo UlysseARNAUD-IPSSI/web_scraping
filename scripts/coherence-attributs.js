@@ -104,9 +104,11 @@
 
         fs.writeFileSync(`${resultPath}/coherence-attributs.json`,
             JSON.stringify({date: DateHelper.now(), data: result}), 'utf8', err => {
-                if (err) return Logger.error(err);
+                if (err) return logger.error(err);
             }, {encoding: "utf8", flag: "a+", mode: 0o666});
 
     }
+
+    logger.success('Script fini');
 
 })();

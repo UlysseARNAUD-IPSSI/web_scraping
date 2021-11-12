@@ -26,14 +26,18 @@ global.Logger = function (path) {
     const _errorStream = fs.createWriteStream(`${logsPath}\\error.txt`, options);
     // fs.writeFile(`${logsPath}\\debug.txt`, '', onError);
     const _debugStream = fs.createWriteStream(`${logsPath}\\debug.txt`, options);
+    // fs.writeFile(`${logsPath}\\success.txt`, '', onError);
+    const _successStream = fs.createWriteStream(`${logsPath}\\success.txt`, options);
 
     _infoStream.on('error', function(e) { console.error(e); });
     _errorStream.on('error', function(e) { console.error(e); });
     _debugStream.on('error', function(e) { console.error(e); });
+    _successStream.on('error', function(e) { console.error(e); });
 
     this.info = message => _generic(null, _infoStream, message);
     this.error = message => _generic('red', _errorStream, message);
     this.debug = message => _generic('blue', _debugStream, message);
+    this.success = message => _generic('green', _successStream, message);
 
     // this.close = () => [this._infoStream, this._errorStream, this._debugStream].forEach(file => file.end()),true;
 
