@@ -65,9 +65,9 @@ function _genericMenu(
         if ('retour' === selectedText) return mainMenu();
 
         terminal.clear();
-        // TODO : Tester le bloc else (cas des projets)
-        if (!directories) require(`${path}/${selectedText}`);
-        else require(`${path}/${selectedText}/index`);
+
+        require(`${path}/${selectedText}`);
+
         terminal.clear();
         process.exit();
     });

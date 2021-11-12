@@ -1,5 +1,5 @@
 (module.exports = () => {
-    require('../../bootstrap');
+    require('../../bootstrap-puppeteer');
     global.pages = [];
     global.datas = {years: [['name', 'url']]};
     (async function () {
