@@ -28,7 +28,7 @@
         const database = fs.readdirSync(databasePath);
 
         for (const year of database) {
-            logger.debug(`Loading year ${year}`);
+            logger.debug(`Loading year ${year.replace('.json', '')}`);
             try {
                 // Avec aviation-safety...
                 // planecrashinfo n'aime pas la ligne suivante, d'où le try catch.
