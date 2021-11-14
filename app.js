@@ -75,7 +75,9 @@ function _genericMenu(
 
         terminal.clear();
 
-        require(`${path}/${selectedText}`);
+        global.projectPath = `${path}/${selectedText}`;
+
+        require(projectPath);
 
         terminal.clear();
         process.exit();
